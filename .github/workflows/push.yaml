@@ -1,0 +1,20 @@
+on: [push]
+
+jobs:
+  self_referential_job:
+    runs-on: ubuntu-latest
+    name: Self-referential job
+    steps:
+      # To use this repository's private action, check out the repository
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Store GCC information in a file
+        uses: ./ # Uses an action in the root directory
+        with:
+          command: gcc -v 2> output.txt
+      - name: Read GCC information from a file, x86
+        uses: ./
+        with:
+          command: cat output.txt
+      - name: Read GCC information from a file, x86_64
+        run: cat output.txt
